@@ -96,7 +96,8 @@ earth_html = r"""
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js">
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js">
+</script>
 <style>
 
 body {
@@ -130,7 +131,7 @@ const camera = new THREE.PerspectiveCamera(
     1000
 );
 
-camera.position.z = 3.5;
+camera.position.z = 20;
 
 
 // =================================
@@ -152,7 +153,106 @@ renderer.setPixelRatio(
 );
 
 document.body.appendChild(renderer.domElement);
+// =================================
+// INTERACTIVE CAMERA CONTROLS
+// =================================
 
+const controls = new THREE.OrbitControls(
+    camera,
+    renderer.domElement
+);
+
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+
+controls.enableZoom = true;
+controls.zoomSpeed = 1.0;
+
+controls.enablePan = true;
+controls.panSpeed = 0.8;
+
+controls.minDistance = 2.2;
+controls.maxDistance = 25;
+
+controls.target.set(0, 0, 0);
+// =================================
+// CAMERA CONTROL PANEL
+// =================================
+
+const cameraPanel = document.createElement("div");
+
+cameraPanel.style.position = "absolute";
+cameraPanel.style.top = "15px";
+cameraPanel.style.right = "15px";
+cameraPanel.style.zIndex = "100";
+cameraPanel.style.display = "flex";
+cameraPanel.style.flexDirection = "column";
+cameraPanel.style.gap = "8px";
+
+cameraPanel.innerHTML = `
+    <button id="zoomIn">＋ Zoom In</button>
+    <button id="zoomOut">－ Zoom Out</button>
+    <button id="resetCamera">⟲ Reset View</button>
+    <button id="earthFocus">🌍 Earth Focus</button>
+`;
+
+document.body.appendChild(cameraPanel);
+
+
+// Button styling
+
+cameraPanel.querySelectorAll("button").forEach(button => {
+
+    button.style.padding = "10px 14px";
+    button.style.background = "rgba(0, 25, 55, 0.9)";
+    button.style.color = "#66D9FF";
+    button.style.border = "1px solid #168BFF";
+    button.style.borderRadius = "8px";
+    button.style.cursor = "pointer";
+    button.style.fontSize = "13px";
+
+});
+
+
+// Zoom In
+
+document.getElementById("zoomIn").addEventListener("click", () => {
+
+    controls.dollyIn(1.2);
+    controls.update();
+
+});
+
+
+// Zoom Out
+
+document.getElementById("zoomOut").addEventListener("click", () => {
+
+    controls.dollyOut(1.2);
+    controls.update();
+
+});
+
+
+// Reset Camera
+
+document.getElementById("resetCamera").addEventListener("click", () => {
+
+    camera.position.set(0, 0, 20);
+    controls.target.set(0, 0, 0);
+    controls.update();
+
+});
+
+
+// Earth Focus
+
+document.getElementById("earthFocus").addEventListener("click", () => {
+
+    controls.target.set(0, 0, 0);
+    controls.update();
+
+});
 
 // =================================
 // LIGHTING
@@ -325,95 +425,33 @@ const orbit4 = createOrbit(
     0
 );
 
-// =================================
-// MOUSE ROTATION
-// =================================
 
-let dragging = false;
-
-let previousX = 0;
-
-let previousY = 0;
-
-let rotationSpeed = 0.002;
-
-document.addEventListener("pointerdown", (event) => {
-
-    dragging = true;
-
-    previousX = event.clientX;
-
-    previousY = event.clientY;
-
-});
-
-document.addEventListener("pointerup", () => {
-
-    dragging = false;
-
-});
-
-document.addEventListener("pointermove", (event) => {
-
-    if (!dragging) return;
-
-    const movementX = event.clientX - previousX;
-
-    const movementY = event.clientY - previousY;
-
-    earth.rotation.y += movementX * 0.005;
-
-    earth.rotation.x += movementY * 0.005;
-
-    previousX = event.clientX;
-
-    previousY = event.clientY;
-
-});
-
-
-// =================================
-// ZOOM
-// =================================
-
-document.addEventListener("wheel", (event) => {
-
-    camera.position.z += event.deltaY * 0.002;
-
-    camera.position.z = Math.max(
-        2,
-        Math.min(6, camera.position.z)
-    );
-
-});
+    
 
 
 // =================================
 // ANIMATION
+// =================================
+// =================================
+// ANIMATION ENGINE
 // =================================
 
 function animate() {
 
     requestAnimationFrame(animate);
 
-    if (!dragging) {
+    // Smooth camera controls
+    controls.update();
 
-        earth.rotation.y += rotationSpeed;
+    // Slow Earth rotation
+    earth.rotation.y += 0.0005;
 
-    }
-
-    orbit1.rotation.z += 0.0003;
-
-    orbit2.rotation.z -= 0.0002;
-
-    orbit3.rotation.z += 0.00015;
-
+    // Render 3D environment
     renderer.render(scene, camera);
 
 }
 
 animate();
-
 
 // =================================
 // RESPONSIVE SCREEN
