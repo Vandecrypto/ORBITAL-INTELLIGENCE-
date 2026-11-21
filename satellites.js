@@ -178,4 +178,3 @@ function updateSatelliteScale(satellite, camera) {
     satellite.scale.setScalar(scale);
 
 }
-                                            }
