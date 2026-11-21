@@ -446,7 +446,28 @@ const demoSatellite = createSatellite(
 
 // Enhanced visual scale
 demoSatellite.scale.setScalar(0.25);
+// =================================
+// SATELLITE ORBITAL PHYSICS
+// =================================
 
+const EARTH_MU = 3.986004418e14;
+const EARTH_RADIUS_M = 6371000;
+
+const DEMO_ALTITUDE_M = 550000;
+
+const DEMO_ORBIT_RADIUS_M =
+    EARTH_RADIUS_M + DEMO_ALTITUDE_M;
+
+// Angular velocity (rad/s)
+const DEMO_ANGULAR_VELOCITY = Math.sqrt(
+    EARTH_MU / Math.pow(DEMO_ORBIT_RADIUS_M, 3)
+);
+
+// Simulation runs faster than real time
+const ORBIT_TIME_SCALE = 120;
+
+let demoOrbitAngle = 0;
+let previousFrameTime = performance.now();
 
 // =================================
 // ANIMATION
@@ -464,6 +485,36 @@ function animate() {
 
     // Slow Earth rotation
     earth.rotation.y += 0.0005;
+// =================================
+// SATELLITE ORBITAL MOVEMENT
+// =================================
+
+const currentFrameTime = performance.now();
+
+const deltaTime = Math.min(
+    (currentFrameTime - previousFrameTime) / 1000,
+    0.05
+);
+
+previousFrameTime = currentFrameTime;
+
+// Update orbital angle
+demoOrbitAngle +=
+    DEMO_ANGULAR_VELOCITY *
+    deltaTime *
+    ORBIT_TIME_SCALE;
+
+// Keep satellite on its circular orbit
+const orbitRadius =
+    DEMO_ORBIT_RADIUS_M / EARTH_RADIUS_M;
+
+demoSatellite.position.x =
+    orbitRadius * Math.cos(demoOrbitAngle);
+
+demoSatellite.position.y =
+    orbitRadius * Math.sin(demoOrbitAngle);
+
+demoSatellite.position.z = 0;    
 
     
 
