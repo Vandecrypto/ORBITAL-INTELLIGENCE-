@@ -447,6 +447,26 @@ const demoSatellite = createSatellite(
 // Enhanced visual scale
 demoSatellite.scale.setScalar(0.25);
 // =================================
+// SATELLITE ORBIT TRAIL
+// =================================
+
+const trailPoints = [];
+
+const trailGeometry = new THREE.BufferGeometry();
+
+const trailMaterial = new THREE.LineBasicMaterial({
+    color: 0x00ffff,
+    transparent: true,
+    opacity: 0.9
+});
+
+const orbitTrail = new THREE.Line(
+    trailGeometry,
+    trailMaterial
+);
+
+scene.add(orbitTrail);
+// =================================
 // SATELLITE ORBITAL PHYSICS
 // =================================
 
@@ -514,7 +534,26 @@ demoSatellite.position.x =
 demoSatellite.position.y =
     orbitRadius * Math.sin(demoOrbitAngle);
 
-demoSatellite.position.z = 0;    
+demoSatellite.position.z = 0;  
+// =================================
+// UPDATE SATELLITE TRAIL
+// =================================
+
+trailPoints.push(
+    new THREE.Vector3(
+        demoSatellite.position.x,
+        demoSatellite.position.y,
+        demoSatellite.position.z
+    )
+);
+
+// Keep only recent trail points
+if (trailPoints.length > 250) {
+    trailPoints.shift();
+}
+
+// Update trail geometry
+trailGeometry.setFromPoints(trailPoints);
 
     
 
