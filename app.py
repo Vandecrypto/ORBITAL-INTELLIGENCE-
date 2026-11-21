@@ -102,6 +102,9 @@ earth_html = r"""
 </script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js">
 </script>
+<script>
+SATELLITE_MODULE_PLACEHOLDER
+</script>
 <style>
 
 body {
@@ -482,7 +485,13 @@ window.addEventListener("resize", () => {
 </html>
 
 """
+# INJECT SATELLITE MODULE
 
+earth_html = earth_html.replace(
+    "SATELLITE_MODULE_PLACEHOLDER",
+    satellite_js,
+    1
+)
 
 
 # ==========================================
