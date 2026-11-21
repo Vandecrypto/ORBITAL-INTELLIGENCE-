@@ -438,13 +438,14 @@ const orbit4 = createOrbit(
 const demoSatellite = createSatellite(
     scene,
     {
-        x: 0,
+        x: 1.086,
         y: 0,
-        z: 1.086
+        z: 0
     }
 );
 
-demoSatellite.scale.setScalar(0.08);
+// Enhanced visual scale
+demoSatellite.scale.setScalar(0.25);
 
 
 // =================================
