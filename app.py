@@ -482,13 +482,8 @@ window.addEventListener("resize", () => {
 </html>
 
 """
-# INJECT SATELLITE ENGINE INTO THREE.JS
 
-earth_html = earth_html.replace(
-    "// =================================\n// ANIMATION ENGINE",
-    satellite_js + "\n\n// =================================\n// ANIMATION ENGINE",
-    1
-)
+
 
 # ==========================================
 # DISPLAY 3D EARTH
