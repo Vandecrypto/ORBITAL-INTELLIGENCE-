@@ -424,25 +424,11 @@ const orbit3 = createOrbit(
 
 // Geostationary Orbit
 const orbit4 = createOrbit(
-    35786,
+      35786,
     0xff6600,
     0
 );
-// =================================
-// DEMONSTRATION SATELLITE
-// =================================
 
-const demoSatellite = createSatellite(
-    scene,
-    {
-        x: getOrbitalRadius(550),
-        y: 0,
-        z: 0
-    }
-);
-
-
-    
 
 
 // =================================
@@ -462,8 +448,7 @@ function animate() {
     // Slow Earth rotation
     earth.rotation.y += 0.0005;
 
-    // Responsive satellite scaling
-    updateSatelliteScale(demoSatellite, camera);
+    
 
     // Render 3D environment
     renderer.render(scene, camera);
