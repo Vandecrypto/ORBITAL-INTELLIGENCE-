@@ -447,6 +447,38 @@ const demoSatellite = createSatellite(
 // Enhanced visual scale
 demoSatellite.scale.setScalar(0.25);
 // =================================
+// ADDITIONAL SATELLITES
+// =================================
+
+// POLAR LEO SATELLITE
+const polarSatellite = createSatellite(scene, {
+    x: 0,
+    y: 1.126,
+    z: 0
+});
+
+polarSatellite.scale.setScalar(0.20);
+
+
+// MEO SATELLITE
+const meoSatellite = createSatellite(scene, {
+    x: 2.95,
+    y: 2.95,
+    z: 0
+});
+
+meoSatellite.scale.setScalar(0.18);
+
+
+// GEO SATELLITE
+const geoSatellite = createSatellite(scene, {
+    x: 6.62,
+    y: 0,
+    z: 0
+});
+
+geoSatellite.scale.setScalar(0.18);
+// =================================
 // SATELLITE ORBIT TRAIL
 // =================================
 
