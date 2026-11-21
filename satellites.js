@@ -153,4 +153,29 @@ function createSatellite(scene, position = { x: 0, y: 0, z: 0 }) {
 
     return satellite;
 
+}
+
+// ==========================================
+// RESPONSIVE SATELLITE SCALING
+// ==========================================
+
+function updateSatelliteScale(satellite, camera) {
+
+    const distance = camera.position.distanceTo(
+        satellite.position
+    );
+
+    const screenFactor = Math.min(
+        window.innerWidth / 1200,
+        window.innerHeight / 700
+    );
+
+    const scale = Math.max(
+        0.035,
+        Math.min(0.12, distance * 0.006 * screenFactor)
+    );
+
+    satellite.scale.setScalar(scale);
+
+}
                                             }
