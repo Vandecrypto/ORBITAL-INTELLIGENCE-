@@ -1,6 +1,11 @@
 import streamlit as st
 import streamlit.components.v1 as components
 import base64
+from physics import (
+    orbital_radius,
+    circular_orbital_velocity,
+    orbital_period
+)
 
 # ==========================================
 # PAGE CONFIGURATION
@@ -433,3 +438,48 @@ letter-spacing:3px;
 ● MISSION CONTROL INITIALISED
 </div>
 """, unsafe_allow_html=True)
+# ==========================================
+# SCIENTIFIC COMPUTATION CENTRE
+# ==========================================
+
+st.markdown("---")
+
+st.header("SCIENTIFIC COMPUTATION CENTRE")
+
+altitude = st.number_input(
+    "Satellite Altitude (km)",
+    min_value=160.0,
+    max_value=100000.0,
+    value=400.0,
+    step=10.0
+)
+
+# Perform actual calculations
+
+radius = orbital_radius(altitude)
+
+velocity = circular_orbital_velocity(altitude)
+
+period = orbital_period(altitude)
+
+st.subheader("Orbital Mechanics Analysis")
+
+st.latex(r"v = \sqrt{\frac{\mu}{r}}")
+
+st.write("Circular Orbital Velocity")
+
+st.success(f"{velocity / 1000:.4f} km/s")
+
+st.latex(r"T = 2\pi\sqrt{\frac{r^3}{\mu}}")
+
+st.write("Orbital Period")
+
+st.success(f"{period / 60:.2f} minutes")
+
+st.write("Orbital Radius")
+
+st.info(f"{radius / 1000:.2f} km")
+
+st.caption(
+    "Model: Newtonian Two-Body Circular Orbit"
+)
