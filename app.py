@@ -6,6 +6,10 @@ from physics import (
     circular_orbital_velocity,
     orbital_period
 )
+# LOAD SATELLITE MODULE
+
+with open("satellites.js", "r", encoding="utf-8") as file:
+    satellite_js = file.read()
 
 # ==========================================
 # PAGE CONFIGURATION
@@ -424,6 +428,18 @@ const orbit4 = createOrbit(
     0xff6600,
     0
 );
+// =================================
+// DEMONSTRATION SATELLITE
+// =================================
+
+const demoSatellite = createSatellite(
+    scene,
+    {
+        x: getOrbitalRadius(550),
+        y: 0,
+        z: 0
+    }
+);
 
 
     
@@ -445,6 +461,9 @@ function animate() {
 
     // Slow Earth rotation
     earth.rotation.y += 0.0005;
+
+    // Responsive satellite scaling
+    updateSatelliteScale(demoSatellite, camera);
 
     // Render 3D environment
     renderer.render(scene, camera);
@@ -478,6 +497,13 @@ window.addEventListener("resize", () => {
 </html>
 
 """
+# INJECT SATELLITE ENGINE INTO THREE.JS
+
+earth_html = earth_html.replace(
+    "// =================================\n// ANIMATION ENGINE",
+    satellite_js + "\n\n// =================================\n// ANIMATION ENGINE",
+    1
+)
 
 # ==========================================
 # DISPLAY 3D EARTH
