@@ -232,22 +232,37 @@ const atmosphereMaterial = new THREE.MeshBasicMaterial({
 const atmosphere = new THREE.Mesh(
     atmosphereGeometry,
     atmosphereMaterial
+
 );
 
 scene.add(atmosphere);
-
-
 // =================================
-// ORBITAL RINGS
+// PHYSICS-BASED ORBITAL ENVIRONMENT
 // =================================
 
-function createOrbit(radius, color, rotationX, rotationY) {
+// Earth radius in metres
+const EARTH_RADIUS_M = 6371000;
+
+// Convert altitude into visual orbital radius
+function getOrbitalRadius(altitudeKm) {
+
+    const altitudeM = altitudeKm * 1000;
+
+    return (EARTH_RADIUS_M + altitudeM) / EARTH_RADIUS_M;
+
+}
+
+
+// Create an orbital path using actual altitude
+function createOrbit(altitudeKm, color, inclination) {
+
+    const radius = getOrbitalRadius(altitudeKm);
 
     const geometry = new THREE.TorusGeometry(
         radius,
-        0.002,
+        0.003,
         8,
-        200
+        300
     );
 
     const material = new THREE.MeshBasicMaterial({
@@ -256,7 +271,7 @@ function createOrbit(radius, color, rotationX, rotationY) {
 
         transparent: true,
 
-        opacity: 0.65
+        opacity: 0.8
 
     });
 
@@ -265,9 +280,8 @@ function createOrbit(radius, color, rotationX, rotationY) {
         material
     );
 
-    orbit.rotation.x = rotationX;
-
-    orbit.rotation.y = rotationY;
+    // Inclination in degrees
+    orbit.rotation.x = inclination * Math.PI / 180;
 
     scene.add(orbit);
 
@@ -275,27 +289,41 @@ function createOrbit(radius, color, rotationX, rotationY) {
 
 }
 
+
+// =================================
+// ORBITAL REGIMES
+// =================================
+
+// Low Earth Orbit
 const orbit1 = createOrbit(
-    1.35,
-    0x00aaff,
-    1.1,
-    0.2
+    550,
+    0x00ccff,
+    0
 );
 
+
+// Polar Low Earth Orbit
 const orbit2 = createOrbit(
-    1.55,
-    0x0077ff,
-    0.5,
-    1.0
+    800,
+    0x00ff99,
+    90
 );
 
+
+// Medium Earth Orbit
 const orbit3 = createOrbit(
-    1.75,
-    0x33ccff,
-    1.4,
-    0.8
+    20200,
+    0xffcc00,
+    55
 );
 
+
+// Geostationary Orbit
+const orbit4 = createOrbit(
+    35786,
+    0xff6600,
+    0
+);
 
 // =================================
 // MOUSE ROTATION
