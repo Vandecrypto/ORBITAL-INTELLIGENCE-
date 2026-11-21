@@ -431,7 +431,20 @@ const orbit4 = createOrbit(
     0xff6600,
     0
 );
+// =================================
+// DEMONSTRATION SATELLITE
+// =================================
 
+const demoSatellite = createSatellite(
+    scene,
+    {
+        x: 0,
+        y: 0,
+        z: 1.086
+    }
+);
+
+demoSatellite.scale.setScalar(0.08);
 
 
 // =================================
