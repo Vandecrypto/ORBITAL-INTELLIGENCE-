@@ -451,7 +451,7 @@ demoSatellite.scale.setScalar(0.25);
 // =================================
 
 const EARTH_MU = 3.986004418e14;
-const EARTH_RADIUS_M = 6371000;
+
 
 const DEMO_ALTITUDE_M = 550000;
 
