@@ -18,7 +18,7 @@ function createSatellite(scene, position = { x: 0, y: 0, z: 0 }) {
     );
 
     const bodyMaterial = new THREE.MeshStandardMaterial({
-        color: 0xb5b5b5,
+        color: 0xffd700,
         metalness: 0.85,
         roughness: 0.35
     });
