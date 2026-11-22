@@ -537,10 +537,10 @@ const glowTexture = new THREE.CanvasTexture(glowCanvas);
 // Outer glowing layer
 const trailGlowMaterial = new THREE.PointsMaterial({
     color: 0x00ffff,
-    size: 0.30,
+    size: 0.07,
     map: glowTexture,
     transparent: true,
-    opacity: 0.9,
+    opacity: 0.65,
     blending: THREE.AdditiveBlending,
     depthWrite: false,
     sizeAttenuation: true
