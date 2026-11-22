@@ -552,6 +552,56 @@ const trailGlow = new THREE.Points(
 );
 
 scene.add(trailGlow);
+// ======================================
+// ADDITIONAL SATELLITE TRAIL SYSTEMS
+// ======================================
+
+function createAdditionalTrail(color) {
+
+    const points = [];
+    const geometry = new THREE.BufferGeometry();
+
+    // Bright central line
+    const material = new THREE.LineBasicMaterial({
+        color: color,
+        transparent: true,
+        opacity: 1,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+    });
+
+    const line = new THREE.Line(geometry, material);
+    scene.add(line);
+
+    // Soft outer glow
+    const glowMaterial = new THREE.PointsMaterial({
+        color: color,
+        size: 0.08,
+        map: glowTexture,
+        transparent: true,
+        opacity: 0.65,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        sizeAttenuation: true
+    });
+
+    const glow = new THREE.Points(geometry, glowMaterial);
+    scene.add(glow);
+
+    return {
+        points: points,
+        geometry: geometry
+    };
+}
+
+// Polar - Green
+const polarTrail = createAdditionalTrail(0x00ff66);
+
+// MEO - Yellow
+const meoTrail = createAdditionalTrail(0xffff00);
+
+// GEO - Orange
+const geoTrail = createAdditionalTrail(0xff8800);
 
 // =================================
 // SATELLITE ORBITAL PHYSICS
@@ -730,6 +780,61 @@ if (trailPoints.length > 250) {
 
 // Update trail geometry
 trailGeometry.setFromPoints(trailPoints);
+// ======================================
+// UPDATE POLAR SATELLITE TRAIL
+// ======================================
+
+polarTrail.points.push(
+    new THREE.Vector3(
+        polarSatellite.position.x,
+        polarSatellite.position.y,
+        polarSatellite.position.z
+    )
+);
+
+if (polarTrail.points.length > 250) {
+    polarTrail.points.shift();
+}
+
+polarTrail.geometry.setFromPoints(polarTrail.points);
+
+
+// ======================================
+// UPDATE MEO SATELLITE TRAIL
+// ======================================
+
+meoTrail.points.push(
+    new THREE.Vector3(
+        meoSatellite.position.x,
+        meoSatellite.position.y,
+        meoSatellite.position.z
+    )
+);
+
+if (meoTrail.points.length > 250) {
+    meoTrail.points.shift();
+}
+
+meoTrail.geometry.setFromPoints(meoTrail.points);
+
+
+// ======================================
+// UPDATE GEO SATELLITE TRAIL
+// ======================================
+
+geoTrail.points.push(
+    new THREE.Vector3(
+        geoSatellite.position.x,
+        geoSatellite.position.y,
+        geoSatellite.position.z
+    )
+);
+
+if (geoTrail.points.length > 250) {
+    geoTrail.points.shift();
+}
+
+geoTrail.geometry.setFromPoints(geoTrail.points);
 
     
 
