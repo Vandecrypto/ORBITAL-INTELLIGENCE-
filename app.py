@@ -388,7 +388,7 @@ function createOrbit(altitudeKm, color, inclination) {
     );
 
     // Inclination in degrees
-    orbit.rotation.x = inclination * Math.PI / 180;
+    orbit.rotation.x = (inclination - 90) * Math.PI / 180;
 
     scene.add(orbit);
 
@@ -456,8 +456,8 @@ demoSatellite.scale.setScalar(0.25);
 
 const polarSatellite = createSatellite(scene, {
     x: 0,
-    y: 0,
-    z: 1.126
+    y: 1.126,
+    z: 0
 });
 
 polarSatellite.scale.setScalar(0.20);
@@ -572,10 +572,10 @@ const orbitRadius =
 demoSatellite.position.x =
     orbitRadius * Math.cos(demoOrbitAngle);
 
-demoSatellite.position.y =
-    orbitRadius * Math.sin(demoOrbitAngle);
+demoSatellite.position.y = 0;
 
-demoSatellite.position.z = 0;  
+demoSatellite.position.z =
+    -orbitRadius * Math.sin(demoOrbitAngle);
 // =================================
 // UPDATE SATELLITE TRAIL
 // =================================
