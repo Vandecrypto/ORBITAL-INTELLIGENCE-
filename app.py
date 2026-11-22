@@ -490,15 +490,20 @@ geoSatellite.scale.setScalar(0.20);
 // =================================
 // SATELLITE ORBIT TRAIL
 // =================================
+// ======================================
+// GLOWING LEO ORBITAL TRAIL
+// ======================================
 
 const trailPoints = [];
-
 const trailGeometry = new THREE.BufferGeometry();
 
+// Bright central trail
 const trailMaterial = new THREE.LineBasicMaterial({
     color: 0x00ffff,
     transparent: true,
-    opacity: 0.9
+    opacity: 1,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
 });
 
 const orbitTrail = new THREE.Line(
@@ -507,6 +512,47 @@ const orbitTrail = new THREE.Line(
 );
 
 scene.add(orbitTrail);
+
+// Create soft radial glow texture
+const glowCanvas = document.createElement("canvas");
+glowCanvas.width = 64;
+glowCanvas.height = 64;
+
+const glowContext = glowCanvas.getContext("2d");
+
+const gradient = glowContext.createRadialGradient(
+    32, 32, 0,
+    32, 32, 32
+);
+
+gradient.addColorStop(0, "rgba(255,255,255,1)");
+gradient.addColorStop(0.25, "rgba(255,255,255,0.6)");
+gradient.addColorStop(1, "rgba(255,255,255,0)");
+
+glowContext.fillStyle = gradient;
+glowContext.fillRect(0, 0, 64, 64);
+
+const glowTexture = new THREE.CanvasTexture(glowCanvas);
+
+// Outer glowing layer
+const trailGlowMaterial = new THREE.PointsMaterial({
+    color: 0x00ffff,
+    size: 0.30,
+    map: glowTexture,
+    transparent: true,
+    opacity: 0.9,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    sizeAttenuation: true
+});
+
+const trailGlow = new THREE.Points(
+    trailGeometry,
+    trailGlowMaterial
+);
+
+scene.add(trailGlow);
+
 // =================================
 // SATELLITE ORBITAL PHYSICS
 // =================================
@@ -547,7 +593,7 @@ const GEO_ANGULAR_VELOCITY = Math.sqrt(
 );
 
 // Simulation runs faster than real time
-const ORBIT_TIME_SCALE = 120;
+const ORBIT_TIME_SCALE = 360;
 
 let demoOrbitAngle = 0;
 let polarOrbitAngle = 0;
