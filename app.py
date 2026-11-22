@@ -811,7 +811,7 @@ meoTrail.points.push(
     )
 );
 
-if (meoTrail.points.length > 250) {
+if (meoTrail.points.length > 1500) {
     meoTrail.points.shift();
 }
 
@@ -830,7 +830,7 @@ geoTrail.points.push(
     )
 );
 
-if (geoTrail.points.length > 250) {
+if (geoTrail.points.length >1500) {
     geoTrail.points.shift();
 }
 
