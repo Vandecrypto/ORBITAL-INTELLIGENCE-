@@ -523,11 +523,36 @@ const DEMO_ORBIT_RADIUS_M =
 const DEMO_ANGULAR_VELOCITY = Math.sqrt(
     EARTH_MU / Math.pow(DEMO_ORBIT_RADIUS_M, 3)
 );
+// POLAR LEO ORBIT
+const POLAR_RADIUS_M = EARTH_RADIUS_M + 800000;
+
+const POLAR_ANGULAR_VELOCITY = Math.sqrt(
+    EARTH_MU / Math.pow(POLAR_RADIUS_M, 3)
+);
+
+
+// MEO ORBIT
+const MEO_RADIUS_M = EARTH_RADIUS_M + 20200000;
+
+const MEO_ANGULAR_VELOCITY = Math.sqrt(
+    EARTH_MU / Math.pow(MEO_RADIUS_M, 3)
+);
+
+
+// GEO ORBIT
+const GEO_RADIUS_M = EARTH_RADIUS_M + 35786000;
+
+const GEO_ANGULAR_VELOCITY = Math.sqrt(
+    EARTH_MU / Math.pow(GEO_RADIUS_M, 3)
+);
 
 // Simulation runs faster than real time
 const ORBIT_TIME_SCALE = 120;
 
 let demoOrbitAngle = 0;
+let polarOrbitAngle = 0;
+let meoOrbitAngle = 0;
+let geoOrbitAngle = 0;
 let previousFrameTime = performance.now();
 
 // =================================
@@ -545,7 +570,7 @@ function animate() {
     controls.update();
 
     // Slow Earth rotation
-    earth.rotation.y += 0.0005;
+    
 // =================================
 // SATELLITE ORBITAL MOVEMENT
 // =================================
@@ -559,6 +584,10 @@ const deltaTime = Math.min(
 
 previousFrameTime = currentFrameTime;
 
+earth.rotation.y +=
+    GEO_ANGULAR_VELOCITY *
+    deltaTime *
+    ORBIT_TIME_SCALE * 2;
 // Update orbital angle
 demoOrbitAngle +=
     DEMO_ANGULAR_VELOCITY *
@@ -576,6 +605,66 @@ demoSatellite.position.y = 0;
 
 demoSatellite.position.z =
     -orbitRadius * Math.sin(demoOrbitAngle);
+    // =================================
+// POLAR LEO SATELLITE MOVEMENT
+// =================================
+
+polarOrbitAngle +=
+    POLAR_ANGULAR_VELOCITY *
+    deltaTime *
+    ORBIT_TIME_SCALE;
+
+const polarRadius =
+    POLAR_RADIUS_M / EARTH_RADIUS_M;
+
+polarSatellite.position.x =
+    polarRadius * Math.sin(polarOrbitAngle);
+
+polarSatellite.position.y =
+    polarRadius * Math.cos(polarOrbitAngle);
+
+polarSatellite.position.z = 0;
+// =================================
+// MEO SATELLITE MOVEMENT
+// =================================
+
+meoOrbitAngle +=
+    MEO_ANGULAR_VELOCITY *
+    deltaTime *
+    ORBIT_TIME_SCALE;
+
+const meoRadius =
+    MEO_RADIUS_M / EARTH_RADIUS_M;
+
+const meoInclination = 55 * Math.PI / 180;
+
+meoSatellite.position.x =
+    meoRadius * Math.cos(meoOrbitAngle);
+
+meoSatellite.position.y =
+    meoRadius * Math.sin(meoOrbitAngle) * Math.sin(meoInclination);
+
+meoSatellite.position.z =
+    -meoRadius * Math.sin(meoOrbitAngle) * Math.cos(meoInclination);
+// =================================
+// GEO SATELLITE MOVEMENT
+// =================================
+
+geoOrbitAngle +=
+    GEO_ANGULAR_VELOCITY *
+    deltaTime *
+    ORBIT_TIME_SCALE * 2;
+
+const geoRadius =
+    GEO_RADIUS_M / EARTH_RADIUS_M;
+
+geoSatellite.position.x =
+    geoRadius * Math.cos(geoOrbitAngle);
+
+geoSatellite.position.y = 0;
+
+geoSatellite.position.z =
+    -geoRadius * Math.sin(geoOrbitAngle);
 // =================================
 // UPDATE SATELLITE TRAIL
 // =================================
